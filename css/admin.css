@@ -6,15 +6,15 @@
   --dark-2:     #200e09;
   --dark-3:     #2c1208;
   --card:       #231009;
-  --primary:    #c9a882;
-  --primary-lt: #d4b896;
-  --gold:       #e8c99a;
-  --primary-dk: #a8876a;
+  --primary:    #A6917C;
+  --primary-lt: #B8A48F;
+  --gold:       #CD9595;
+  --primary-dk: #8D7B69;
   --white:      #f5ede0;
   --text:       #e0cbb5;
   --muted:      #8c7260;
-  --border:     rgba(201,168,130,.15);
-  --border-st:  rgba(201,168,130,.35);
+  --border:     rgba(166,145,124,.18);
+  --border-st:  rgba(166,145,124,.40);
   --radius:     10px;
   --radius-lg:  16px;
   --shadow:     0 4px 20px rgba(0,0,0,.45);
@@ -83,9 +83,9 @@ textarea.form-control { resize:vertical; min-height:90px; }
 /* ── Buttons ────────────────────────────────────────────── */
 .btn { display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border-radius:8px; font-size:13px; font-weight:600; border:none; transition:var(--t); white-space:nowrap; }
 .btn-primary { background:linear-gradient(135deg,var(--primary),var(--primary-dk)); color:var(--dark); }
-.btn-primary:hover { background:linear-gradient(135deg,var(--gold),var(--primary)); box-shadow:0 4px 16px rgba(201,168,130,.35); }
+.btn-primary:hover { background:linear-gradient(135deg,var(--gold),var(--primary)); box-shadow:0 4px 16px rgba(166,145,124,.35); }
 .btn-outline { background:transparent; border:1px solid var(--border-st); color:var(--primary); }
-.btn-outline:hover { background:rgba(201,168,130,.1); border-color:var(--primary); }
+.btn-outline:hover { background:rgba(166,145,124,.1); border-color:var(--primary); }
 .btn-danger { background:rgba(217,79,79,.12); border:1px solid rgba(217,79,79,.3); color:var(--danger); }
 .btn-danger:hover { background:rgba(217,79,79,.2); }
 .btn-success { background:rgba(92,184,122,.12); border:1px solid rgba(92,184,122,.3); color:var(--success); }
@@ -116,8 +116,8 @@ textarea.form-control { resize:vertical; min-height:90px; }
   transition:var(--t); margin-bottom:2px; cursor:pointer; border:none; background:none; width:100%;
 }
 .s-nav-link i { width:18px; text-align:center; font-size:15px; }
-.s-nav-link:hover { color:var(--text); background:rgba(201,168,130,.06); }
-.s-nav-link.active { color:var(--primary); background:rgba(201,168,130,.1); }
+.s-nav-link:hover { color:var(--text); background:rgba(166,145,124,.06); }
+.s-nav-link.active { color:var(--primary); background:rgba(166,145,124,.1); }
 .sidebar-footer { padding:16px 10px; border-top:1px solid var(--border); }
 
 /* Main */
@@ -146,7 +146,7 @@ textarea.form-control { resize:vertical; min-height:90px; }
   width:50px; height:50px; border-radius:12px;
   display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;
 }
-.stat-icon.gold  { background:rgba(201,168,130,.15); color:var(--primary); }
+.stat-icon.gold  { background:rgba(166,145,124,.15); color:var(--primary); }
 .stat-icon.pink  { background:rgba(200,100,150,.15); color:#d97ab0; }
 .stat-icon.green { background:rgba(92,184,122,.15);  color:var(--success); }
 .stat-icon.blue  { background:rgba(80,140,200,.15);  color:#6aa8e0; }
@@ -172,7 +172,7 @@ table { width:100%; border-collapse:collapse; }
 thead th { padding:12px 16px; text-align:left; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); white-space:nowrap; }
 tbody td { padding:14px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
 tbody tr:last-child td { border-bottom:none; }
-tbody tr:hover td { background:rgba(201,168,130,.04); }
+tbody tr:hover td { background:rgba(166,145,124,.04); }
 .td-img { width:48px; height:48px; border-radius:8px; object-fit:cover; background:var(--dark-3); flex-shrink:0; }
 .td-img-placeholder { width:48px; height:48px; border-radius:8px; background:var(--dark-3); display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; }
 .td-name { font-size:14px; color:var(--white); font-weight:500; }
@@ -183,7 +183,7 @@ tbody tr:hover td { background:rgba(201,168,130,.04); }
 .badge-active   { background:rgba(92,184,122,.15); color:var(--success); }
 .badge-inactive { background:rgba(140,114,96,.15);  color:var(--muted); }
 .badge-low      { background:rgba(232,150,58,.15);  color:var(--warn); }
-.badge-cat { background:rgba(201,168,130,.12); color:var(--primary); }
+.badge-cat { background:rgba(166,145,124,.12); color:var(--primary); }
 .table-empty { padding:60px; text-align:center; color:var(--muted); }
 .table-empty i { font-size:40px; opacity:.35; display:block; margin-bottom:12px; }
 
@@ -211,8 +211,8 @@ tbody tr:hover td { background:rgba(201,168,130,.04); }
   border:2px dashed var(--border); border-radius:var(--radius-lg);
   padding:28px; text-align:center; cursor:pointer; transition:var(--t); position:relative;
 }
-.img-upload-area:hover { border-color:var(--primary); background:rgba(201,168,130,.04); }
-.img-upload-area.drag-over { border-color:var(--primary); background:rgba(201,168,130,.08); }
+.img-upload-area:hover { border-color:var(--primary); background:rgba(166,145,124,.04); }
+.img-upload-area.drag-over { border-color:var(--primary); background:rgba(166,145,124,.08); }
 .img-upload-area input { display:none; }
 .img-upload-area .upload-icon { font-size:32px; color:var(--muted); margin-bottom:10px; }
 .img-upload-area p { font-size:13px; color:var(--muted); }
@@ -234,7 +234,7 @@ tbody tr:hover td { background:rgba(201,168,130,.04); }
 }
 .cat-admin-card:hover { border-color:var(--border-st); }
 .cat-admin-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.cat-admin-icon { width:44px; height:44px; background:rgba(201,168,130,.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--primary); flex-shrink:0; }
+.cat-admin-icon { width:44px; height:44px; background:rgba(166,145,124,.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--primary); flex-shrink:0; }
 .cat-admin-name { font-size:16px; color:var(--white); font-family:'Cormorant Garamond',serif; }
 .cat-admin-desc { font-size:12px; color:var(--muted); margin-bottom:12px; min-height:18px; }
 .cat-admin-footer { display:flex; align-items:center; justify-content:space-between; }
@@ -249,7 +249,7 @@ tbody tr:hover td { background:rgba(201,168,130,.04); }
   cursor:pointer; font-size:16px; color:var(--muted); transition:var(--t);
 }
 .icon-opt:hover { border-color:var(--primary); color:var(--primary); }
-.icon-opt.selected { border-color:var(--primary); background:rgba(201,168,130,.12); color:var(--primary); }
+.icon-opt.selected { border-color:var(--primary); background:rgba(166,145,124,.12); color:var(--primary); }
 .icon-input-wrap { display:flex; gap:8px; align-items:center; }
 .icon-preview { font-size:22px; color:var(--primary); min-width:30px; text-align:center; }
 
