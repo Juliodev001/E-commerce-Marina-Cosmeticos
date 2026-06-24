@@ -179,36 +179,72 @@ const Admin = {
 
   // ── Dashboard ────────────────────────────────────────────
   renderDashboard() {
-    const prods = MarinStore.getProducts();
-    const cats  = MarinStore.getCategories();
-    const active = prods.filter(p => p.active);
+    const prods    = MarinStore.getProducts();
+    const cats     = MarinStore.getCategories();
+    const orders   = MarinStore.getOrders();
+    const users    = MarinStore.getUsers();
+    const active   = prods.filter(p => p.active);
     const featured = prods.filter(p => p.featured && p.active);
     const stockVal = prods.reduce((s, p) => s + (p.price * p.quantity), 0);
 
-    document.getElementById('statProds').textContent  = active.length;
-    document.getElementById('statCats').textContent   = cats.filter(c => c.active).length;
-    document.getElementById('statFeat').textContent   = featured.length;
-    document.getElementById('statVal').textContent    = MarinStore.fmtPrice(stockVal);
+    document.getElementById('statProds').textContent   = active.length;
+    document.getElementById('statCats').textContent    = cats.filter(c => c.active).length;
+    document.getElementById('statFeat').textContent    = featured.length;
+    document.getElementById('statVal').textContent     = MarinStore.fmtPrice(stockVal);
     const ordEl = document.getElementById('statOrders');
-    if (ordEl) ordEl.textContent = MarinStore.getOrders().length;
+    if (ordEl) ordEl.textContent = orders.length;
+    const cliEl = document.getElementById('statClients');
+    if (cliEl) cliEl.textContent = users.length;
+
     this.animateCards();
 
-    // Recent products list
-    const recent = [...prods].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
+    // ── Estoque baixo
+    const lowStock = prods.filter(p => p.active && p.quantity <= 3).sort((a,b) => a.quantity - b.quantity);
+    const lowEl = document.getElementById('lowStockList');
+    if (lowEl) {
+      lowEl.innerHTML = lowStock.length ? lowStock.slice(0,6).map(p => `
+        <div class="low-stock-item">
+          <span class="low-stock-name">${p.name}</span>
+          <span class="low-stock-qty${p.quantity === 0 ? ' zero' : ''}">${p.quantity === 0 ? 'Esgotado' : p.quantity + ' un.'}</span>
+        </div>`).join('')
+        : '<p class="dash-empty"><i class="fa-solid fa-circle-check"></i> Estoque em dia!</p>';
+    }
+
+    // ── Pedidos recentes
+    const recentOrders = [...orders].reverse().slice(0, 5);
+    const statusColor  = s => ({ Processando:'#e8963a', Enviado:'#2980b9', Entregue:'#5cb87a', Cancelado:'#d94f4f' }[s] || '#e8963a');
+    const ordListEl = document.getElementById('recentOrdersList');
+    if (ordListEl) {
+      ordListEl.innerHTML = recentOrders.length ? recentOrders.map(o => `
+        <div class="recent-order-item">
+          <div>
+            <div class="recent-order-id">${o.id}</div>
+            <div class="recent-order-name">${o.customerName || '—'}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:.8rem;font-weight:700;color:#1a0907;">${MarinStore.fmtPrice(o.total)}</div>
+            <span style="font-size:.72rem;font-weight:700;color:${statusColor(o.status)}">${o.status}</span>
+          </div>
+        </div>`).join('')
+        : '<p class="dash-empty"><i class="fa-solid fa-receipt"></i> Nenhum pedido ainda.</p>';
+    }
+
+    // ── Produtos recentes
+    const recent = [...prods].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
     document.getElementById('recentList').innerHTML = recent.map(p => {
-      const cat = MarinStore.getCategories().find(c => c.id === p.category);
+      const cat = cats.find(c => c.id === p.category);
       return `
-        <div class="cart-item" style="background:var(--dark-3);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-          <div style="width:44px;height:44px;border-radius:8px;background:var(--card);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-            ${p.image ? `<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="${cat ? cat.icon : 'fa-solid fa-box'}" style="color:var(--primary);font-size:18px;"></i>`}
+        <div style="background:rgba(255,255,255,.25);border:1px solid rgba(26,9,7,.1);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            ${p.image ? `<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="${cat ? cat.icon : 'fa-solid fa-box'}" style="color:#CD9595;font-size:18px;"></i>`}
           </div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:var(--white);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
-            <div style="font-size:11px;color:var(--muted);">${cat ? cat.name : p.category} · ${MarinStore.fmtPrice(p.price)}</div>
+            <div style="font-size:13px;color:#1a0907;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+            <div style="font-size:11px;color:#4a3328;">${cat ? cat.name : p.category} · ${MarinStore.fmtPrice(p.price)}</div>
           </div>
           <span class="badge ${p.active ? 'badge-active' : 'badge-inactive'}">${p.active ? 'Ativo' : 'Inativo'}</span>
         </div>`;
-    }).join('') || '<p style="color:var(--muted);font-size:13px;">Nenhum produto ainda.</p>';
+    }).join('') || '<p class="dash-empty">Nenhum produto ainda.</p>';
   },
 
   // ── Products Table ───────────────────────────────────────
