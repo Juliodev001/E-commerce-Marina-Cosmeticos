@@ -41,7 +41,7 @@ h1,h2,h3,h4 { font-family:'Cormorant Garamond',serif; font-weight:600; line-heig
 /* ── Login Page ─────────────────────────────────────────── */
 .login-page {
   min-height:100vh; display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(ellipse at 50% 40%, #280c06 0%, #1a0907 60%, #0c0403 100%);
+  background:#A6917C;
   padding:24px;
 }
 .login-card {
