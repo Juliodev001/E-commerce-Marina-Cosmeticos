@@ -272,23 +272,126 @@ tbody tr:hover td { background:rgba(201,168,130,.04); }
 .a-toast.success { border-color:rgba(92,184,122,.4); }
 .a-toast.error   { border-color:rgba(217,79,79,.4); color:#f08080; }
 
+/* ── Sidebar overlay (mobile) ───────────────────────────── */
+.sidebar-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.6);
+  backdrop-filter:blur(3px); z-index:99;
+}
+.sidebar-overlay.show { display:block; }
+
 /* ── Responsive ─────────────────────────────────────────── */
+
+/* ── 1024px: tablet grande ── */
+@media (max-width:1024px) {
+  .settings-grid { grid-template-columns:1fr; }
+  .admin-content { padding:22px; }
+}
+
+/* ── 900px ── */
 @media (max-width:900px) {
   .settings-grid { grid-template-columns:1fr; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
 }
+
+/* ── 768px: mobile ── */
 @media (max-width:768px) {
-  .admin-sidebar { transform:translateX(-100%); }
+  /* Sidebar: gaveta lateral */
+  .admin-sidebar {
+    transform:translateX(-100%);
+    box-shadow:4px 0 32px rgba(0,0,0,.6);
+  }
   .admin-sidebar.open { transform:translateX(0); }
+
+  /* Main ajusta sem sidebar */
   .admin-main { margin-left:0; }
-  .admin-topbar { padding:14px 18px; }
+
+  /* Topbar: mostra botão de toggle */
+  .admin-topbar { padding:12px 16px; }
+  #sidebarToggle { display:inline-flex !important; }
+
+  /* Content */
   .admin-content { padding:16px; }
-  .stats-grid { grid-template-columns:1fr 1fr; }
-  .form-row { grid-template-columns:1fr; }
-  .cats-grid { grid-template-columns:1fr 1fr; }
-  .table-search input { width:140px; }
+
+  /* Stats */
+  .stats-grid { grid-template-columns:repeat(2,1fr); gap:12px; }
+  .stat-card { padding:16px; gap:12px; }
+  .stat-icon { width:42px; height:42px; font-size:18px; }
+  .stat-card h3 { font-size:20px; }
+
+  /* Forms */
+  .form-row { grid-template-columns:1fr; gap:0; }
+
+  /* Categorias */
+  .cats-grid { grid-template-columns:repeat(2,1fr); }
+
+  /* Tabela: scroll horizontal */
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .table-header { padding:14px 16px; flex-wrap:wrap; gap:10px; }
+  .table-search input { width:130px; }
+  thead th { white-space:nowrap; }
+  tbody td { white-space:nowrap; }
+  .td-name, .td-brand { white-space:normal; min-width:120px; }
+
+  /* Modal */
+  .modal-backdrop { padding:0; align-items:flex-end; }
+  .modal-panel {
+    max-width:100%; max-height:94vh;
+    border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .modal-panel-header { padding:16px 18px; }
+  .modal-panel-body { padding:18px; }
+  .modal-panel-footer { padding:14px 18px; }
+
+  /* Icon picker */
+  .icon-picker { grid-template-columns:repeat(7,1fr); }
+
+  /* Login */
+  .login-card { padding:36px 28px; }
+
+  /* Topbar title */
+  .topbar-title h2 { font-size:18px; }
 }
+
+/* ── 480px: mobile pequeno ── */
 @media (max-width:480px) {
+  /* Stats: 1 coluna */
+  .stats-grid { grid-template-columns:1fr; }
+  .stat-card { flex-direction:row; }
+
+  /* Categorias */
+  .cats-grid { grid-template-columns:1fr; }
+
+  /* Login */
+  .login-card { padding:28px 18px; }
+  .login-logo { height:64px; }
+
+  /* Table toolbar */
+  .table-header { flex-direction:column; align-items:stretch; }
+  .table-search { width:100%; }
+  .table-search input { flex:1; width:auto; }
+  .table-header .btn { width:100%; justify-content:center; }
+
+  /* Topbar */
+  .admin-topbar { padding:10px 12px; }
+  .topbar-title h2 { font-size:16px; }
+  .topbar-title p { display:none; }
+  .topbar-actions .btn span { display:none; }
+
+  /* Modal full-height */
+  .modal-panel { max-height:96vh; }
+
+  /* Icon picker */
+  .icon-picker { grid-template-columns:repeat(6,1fr); gap:6px; }
+  .icon-opt { width:36px; height:36px; font-size:14px; }
+
+  /* Content */
+  .admin-content { padding:12px; }
+}
+
+/* ── 360px: mobile muito pequeno ── */
+@media (max-width:360px) {
   .stats-grid { grid-template-columns:1fr; }
   .cats-grid { grid-template-columns:1fr; }
-  .login-card { padding:32px 24px; }
+  .icon-picker { grid-template-columns:repeat(5,1fr); }
+  .settings-section { padding:16px; }
 }

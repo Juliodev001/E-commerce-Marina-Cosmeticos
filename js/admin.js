@@ -73,8 +73,21 @@ const Admin = {
     });
     // Mobile sidebar toggle
     const tog = document.getElementById('sidebarToggle');
-    if (tog) tog.addEventListener('click', () =>
-      document.getElementById('adminSidebar').classList.toggle('open')
+    const overlay = document.getElementById('sidebarOverlay');
+    const sidebar = document.getElementById('adminSidebar');
+    const closeSidebar = () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    };
+    if (tog) tog.addEventListener('click', () => {
+      const opening = !sidebar.classList.contains('open');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show', opening);
+    });
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    // Close sidebar on nav item click (mobile)
+    document.querySelectorAll('.s-nav-link').forEach(link =>
+      link.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); })
     );
     // Product search
     document.getElementById('prodSearch').addEventListener('input', e => {

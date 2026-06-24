@@ -320,9 +320,19 @@ const App = {
       document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 50)
     );
     // Mobile menu
+    const mainNav = document.getElementById('mainNav');
     document.getElementById('menuToggle').addEventListener('click', () =>
-      document.getElementById('mainNav').classList.toggle('open')
+      mainNav.classList.toggle('open')
     );
+    // Close mobile menu when a nav link is clicked
+    mainNav.querySelectorAll('.nav-link').forEach(link =>
+      link.addEventListener('click', () => mainNav.classList.remove('open'))
+    );
+    // Close mobile menu on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#mainNav') && !e.target.closest('#menuToggle'))
+        mainNav.classList.remove('open');
+    });
     // Cart
     document.getElementById('cartToggle').addEventListener('click', () => this.openCart());
     document.getElementById('cartClose').addEventListener('click', () => this.closeCart());
