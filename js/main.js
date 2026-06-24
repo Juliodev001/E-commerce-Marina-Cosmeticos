@@ -15,6 +15,7 @@ const App = {
     this.buildFilters();
     this.loadProducts('all');
     this.refreshCart();
+    this.refreshUserUI();
     this.updateFooter();
     this.bindEvents();
     this.initGsap();
@@ -169,6 +170,14 @@ const App = {
   },
 
   // ── Cart ─────────────────────────────────────────────────
+  requireLogin() {
+    if (!MarinStore.getCurrentUser()) {
+      this.openAuthModal();
+      return false;
+    }
+    return true;
+  },
+
   refreshCart() { this.updateBadge(); this.renderCart(); },
 
   updateBadge() {
@@ -227,6 +236,7 @@ const App = {
   },
 
   openCart() {
+    if (!this.requireLogin()) return;
     const s = document.getElementById('cartSidebar'), o = document.getElementById('cartOverlay');
     o.classList.add('active');
     gsap.fromTo(s, { x: '100%' }, { x: '0%', duration: .35, ease: 'power2.out' });
@@ -237,6 +247,7 @@ const App = {
   },
 
   quickAdd(id) {
+    if (!this.requireLogin()) return;
     const p = MarinStore.getProduct(id);
     if (!p || p.quantity <= 0) return;
     MarinStore.addToCart(id, 1);
@@ -301,16 +312,107 @@ const App = {
 
   // ── Checkout ─────────────────────────────────────────────
   checkout() {
+    if (!this.requireLogin()) return;
     const cart = MarinStore.getCart();
     if (!cart.length) { this.toast('Carrinho vazio!'); return; }
+    const user = MarinStore.getCurrentUser();
     const s = MarinStore.getSettings();
-    let msg = '🌸 *Olá! Gostaria de fazer um pedido na Marina Cosméticos:*\n\n';
-    cart.forEach(item => {
+    const items = cart.map(item => {
       const p = MarinStore.getProduct(item.productId);
-      if (p) msg += `▪ *${p.name}*${p.brand ? ` (${p.brand})` : ''}\n  ${item.qty}x ${MarinStore.fmtPrice(p.price)} = ${MarinStore.fmtPrice(p.price * item.qty)}\n\n`;
+      return p ? { id: p.id, name: p.name, brand: p.brand, price: p.price, qty: item.qty } : null;
+    }).filter(Boolean);
+    const total = MarinStore.getCartTotal();
+    const order = MarinStore.createOrder(user.id, user.name, items, total);
+
+    let msg = `🌸 *Olá! Gostaria de fazer um pedido na Marina Cosméticos:*\n\n`;
+    msg += `👤 *Cliente:* ${user.name}\n`;
+    msg += `🆔 *Pedido:* ${order.id}\n\n`;
+    items.forEach(it => {
+      msg += `▪ *${it.name}*${it.brand ? ` (${it.brand})` : ''}\n  ${it.qty}x ${MarinStore.fmtPrice(it.price)} = ${MarinStore.fmtPrice(it.price * it.qty)}\n\n`;
     });
-    msg += `💰 *Total: ${MarinStore.fmtPrice(MarinStore.getCartTotal())}*`;
+    msg += `💰 *Total: ${MarinStore.fmtPrice(total)}*`;
+
+    MarinStore.clearCart();
+    this.refreshCart();
+    this.closeCart();
+    this.toast(`Pedido ${order.id} criado! Abrindo WhatsApp…`);
     window.open(`https://wa.me/${s.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+  },
+
+  // ── User Auth UI ─────────────────────────────────────────
+  refreshUserUI() {
+    const user = MarinStore.getCurrentUser();
+    const chip = document.getElementById('userNameChip');
+    const dropdown = document.getElementById('userDropdown');
+    if (user) {
+      chip.textContent = user.name.split(' ')[0];
+      chip.style.display = 'inline-block';
+      document.getElementById('dropdownName').textContent = user.name;
+    } else {
+      chip.style.display = 'none';
+      if (dropdown) dropdown.classList.remove('show');
+    }
+    this.refreshCart();
+  },
+
+  openAuthModal(tab = 'login') {
+    document.getElementById('authOverlay').classList.add('show');
+    const modal = document.getElementById('authModal');
+    modal.classList.add('show');
+    this.switchAuthTab(tab);
+    document.getElementById('userDropdown').classList.remove('show');
+  },
+
+  closeAuthModal() {
+    document.getElementById('authOverlay').classList.remove('show');
+    document.getElementById('authModal').classList.remove('show');
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('registerError').textContent = '';
+    document.getElementById('loginForm').reset();
+    document.getElementById('registerForm').reset();
+  },
+
+  switchAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'flex' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? 'flex' : 'none';
+  },
+
+  // ── Orders UI ────────────────────────────────────────────
+  openOrders() {
+    document.getElementById('ordersOverlay').classList.add('show');
+    document.getElementById('ordersModal').classList.add('show');
+    document.getElementById('userDropdown').classList.remove('show');
+    this.renderOrders();
+  },
+
+  closeOrders() {
+    document.getElementById('ordersOverlay').classList.remove('show');
+    document.getElementById('ordersModal').classList.remove('show');
+  },
+
+  renderOrders() {
+    const user = MarinStore.getCurrentUser();
+    const body = document.getElementById('ordersBody');
+    if (!user) { body.innerHTML = ''; return; }
+    const orders = MarinStore.getUserOrders(user.id);
+    if (!orders.length) {
+      body.innerHTML = `<div class="orders-empty"><i class="fa-solid fa-box-open"></i><p>Você ainda não fez nenhum pedido.</p></div>`;
+      return;
+    }
+    const statusClass = s => ({ 'Processando': 'processando', 'Enviado': 'enviado', 'Entregue': 'entregue', 'Cancelado': 'cancelado' }[s] || 'processando');
+    body.innerHTML = [...orders].reverse().map(o => `
+      <div class="order-card">
+        <div class="order-card-head">
+          <span class="order-id">${o.id}</span>
+          <span class="order-date">${new Date(o.createdAt).toLocaleDateString('pt-BR')}</span>
+          <span class="order-status ${statusClass(o.status)}">${o.status}</span>
+        </div>
+        <div class="order-items">${o.items.map(i => `${i.qty}x ${i.name}`).join(' · ')}</div>
+        <div class="order-total">Total: ${MarinStore.fmtPrice(o.total)}</div>
+        ${o.trackingCode ? `<div class="order-tracking">Rastreio: <strong>${o.trackingCode}</strong></div>` : ''}
+      </div>
+    `).join('');
   },
 
   // ── Events ───────────────────────────────────────────────
@@ -319,20 +421,20 @@ const App = {
     window.addEventListener('scroll', () =>
       document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 50)
     );
+
     // Mobile menu
     const mainNav = document.getElementById('mainNav');
     document.getElementById('menuToggle').addEventListener('click', () =>
       mainNav.classList.toggle('open')
     );
-    // Close mobile menu when a nav link is clicked
     mainNav.querySelectorAll('.nav-link').forEach(link =>
       link.addEventListener('click', () => mainNav.classList.remove('open'))
     );
-    // Close mobile menu on outside click
     document.addEventListener('click', e => {
       if (!e.target.closest('#mainNav') && !e.target.closest('#menuToggle'))
         mainNav.classList.remove('open');
     });
+
     // Cart
     document.getElementById('cartToggle').addEventListener('click', () => this.openCart());
     document.getElementById('cartClose').addEventListener('click', () => this.closeCart());
@@ -341,15 +443,18 @@ const App = {
       MarinStore.clearCart(); this.refreshCart(); this.toast('Carrinho esvaziado');
     });
     document.getElementById('checkoutBtn').addEventListener('click', () => this.checkout());
+
     // Hero CTA
     document.getElementById('heroShopBtn').addEventListener('click', () =>
       document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' })
     );
+
     // Search inline
     document.getElementById('searchInput').addEventListener('input', e =>
       this.loadProducts(this.activeCat, e.target.value)
     );
-    // Modal
+
+    // Product modal
     document.getElementById('modalClose').addEventListener('click', () => this.closeModal());
     document.getElementById('modalOverlay').addEventListener('click', () => this.closeModal());
     document.getElementById('modalQtyMinus').addEventListener('click', () => {
@@ -361,12 +466,87 @@ const App = {
       }
     });
     document.getElementById('modalAdd').addEventListener('click', () => {
+      if (!this.requireLogin()) { this.closeModal(); return; }
       if (this.activeModal) {
         MarinStore.addToCart(this.activeModal.id, this.modalQty);
         this.refreshCart(); this.closeModal();
         this.toast(`${this.activeModal.name} adicionado ao carrinho!`);
       }
     });
+
+    // User toggle button
+    document.getElementById('userToggle').addEventListener('click', e => {
+      e.stopPropagation();
+      const user = MarinStore.getCurrentUser();
+      if (!user) { this.openAuthModal('login'); return; }
+      const dd = document.getElementById('userDropdown');
+      dd.classList.toggle('show');
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#userToggle') && !e.target.closest('#userDropdown'))
+        document.getElementById('userDropdown').classList.remove('show');
+    });
+
+    // User dropdown actions
+    document.getElementById('myOrdersBtn').addEventListener('click', () => this.openOrders());
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      MarinStore.logoutUser();
+      this.refreshUserUI();
+      this.toast('Sessão encerrada.');
+    });
+
+    // Auth modal overlay + close
+    document.getElementById('authOverlay').addEventListener('click', () => this.closeAuthModal());
+    document.getElementById('authClose').addEventListener('click', () => this.closeAuthModal());
+
+    // Auth tabs
+    document.querySelectorAll('.auth-tab').forEach(tab =>
+      tab.addEventListener('click', () => this.switchAuthTab(tab.dataset.tab))
+    );
+    document.getElementById('goRegister').addEventListener('click', () => this.switchAuthTab('register'));
+    document.getElementById('goLogin').addEventListener('click', () => this.switchAuthTab('login'));
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPassword').value;
+      const user = MarinStore.loginUser(email, pass);
+      if (!user) {
+        document.getElementById('loginError').textContent = 'E-mail ou senha incorretos.';
+        return;
+      }
+      this.closeAuthModal();
+      this.refreshUserUI();
+      this.toast(`Bem-vinda, ${user.name.split(' ')[0]}!`);
+    });
+
+    // Register form
+    document.getElementById('registerForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const pass = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirm').value;
+      if (pass !== confirm) {
+        document.getElementById('registerError').textContent = 'As senhas não coincidem.';
+        return;
+      }
+      const result = MarinStore.registerUser(name, email, pass);
+      if (result.error) {
+        document.getElementById('registerError').textContent = result.error;
+        return;
+      }
+      this.closeAuthModal();
+      this.refreshUserUI();
+      this.toast(`Conta criada! Bem-vinda, ${result.user.name.split(' ')[0]}!`);
+    });
+
+    // Orders modal
+    document.getElementById('ordersClose').addEventListener('click', () => this.closeOrders());
+    document.getElementById('ordersOverlay').addEventListener('click', () => this.closeOrders());
   },
 
   // ── Toast ────────────────────────────────────────────────
@@ -379,22 +559,18 @@ const App = {
 
   // ── GSAP Animations ──────────────────────────────────────
   initGsap() {
-    // Hero timeline
     gsap.timeline({ delay: .15 })
       .fromTo('#heroLogo', { opacity: 0, scale: .82 }, { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' })
       .fromTo('#heroText', { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, '-=.45')
       .fromTo('#heroScroll', { opacity: 0 }, { opacity: 1, duration: .5 }, '-=.2');
 
-    // Sparkles twinkle
     gsap.to('.sparkle', {
       opacity: 0, scale: 0, duration: 1.6, ease: 'power1.inOut',
       yoyo: true, repeat: -1, stagger: { each: .4, from: 'random' }
     });
 
-    // Scroll-indicator pulse
     gsap.to('.scroll-line', { y: 12, opacity: .25, duration: .9, ease: 'power1.inOut', yoyo: true, repeat: -1 });
 
-    // Section headers on scroll
     document.querySelectorAll('.section-header').forEach(el =>
       gsap.fromTo(el, { opacity: 0, y: 28 }, {
         opacity: 1, y: 0, duration: .7,
@@ -402,7 +578,6 @@ const App = {
       })
     );
 
-    // Category cards stagger
     ScrollTrigger.create({
       trigger: '#categoriesGrid', start: 'top 82%', once: true,
       onEnter: () => gsap.fromTo('.category-card',
@@ -411,7 +586,6 @@ const App = {
       )
     });
 
-    // About section
     gsap.fromTo('#aboutVisual', { opacity: 0, x: -50 }, {
       opacity: 1, x: 0, duration: .8, ease: 'power2.out',
       scrollTrigger: { trigger: '#aboutSection', start: 'top 80%', once: true }
@@ -421,7 +595,6 @@ const App = {
       scrollTrigger: { trigger: '#aboutSection', start: 'top 80%', once: true }
     });
 
-    // Animated counters
     ScrollTrigger.create({
       trigger: '.about-stats', start: 'top 82%', once: true,
       onEnter: () => {

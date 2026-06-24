@@ -2,10 +2,17 @@
 
 const MarinStore = {
   KEYS: {
-    products: 'marina_products',
-    categories: 'marina_categories',
-    cart: 'marina_cart',
-    settings: 'marina_settings',
+    products:    'marina_products',
+    categories:  'marina_categories',
+    settings:    'marina_settings',
+    users:       'marina_users',
+    userSession: 'marina_user_session',
+    orders:      'marina_orders',
+  },
+
+  getCartKey() {
+    const u = this.getCurrentUser();
+    return u ? `marina_cart_${u.id}` : 'marina_cart_guest';
   },
 
   DEFAULT_CATEGORIES: [
@@ -85,10 +92,10 @@ const MarinStore = {
 
   // ── Cart ─────────────────────────────────────────────────
   getCart() {
-    return JSON.parse(localStorage.getItem(this.KEYS.cart) || '[]');
+    return JSON.parse(localStorage.getItem(this.getCartKey()) || '[]');
   },
   saveCart(cart) {
-    localStorage.setItem(this.KEYS.cart, JSON.stringify(cart));
+    localStorage.setItem(this.getCartKey(), JSON.stringify(cart));
   },
   addToCart(productId, qty = 1) {
     const cart = this.getCart();
@@ -117,7 +124,7 @@ const MarinStore = {
     }, 0);
   },
 
-  // ── Auth ─────────────────────────────────────────────────
+  // ── Admin Auth ────────────────────────────────────────────
   getPassword() { return localStorage.getItem('marina_admin_pass') || 'marina2001'; },
   setPassword(pwd) { localStorage.setItem('marina_admin_pass', pwd); },
   isLoggedIn() { return sessionStorage.getItem('marina_admin_ok') === '1'; },
@@ -126,6 +133,64 @@ const MarinStore = {
     return false;
   },
   logout() { sessionStorage.removeItem('marina_admin_ok'); },
+
+  // ── Customer Auth ─────────────────────────────────────────
+  getUsers() { return JSON.parse(localStorage.getItem(this.KEYS.users) || '[]'); },
+  saveUsers(u) { localStorage.setItem(this.KEYS.users, JSON.stringify(u)); },
+  getCurrentUser() {
+    const s = localStorage.getItem(this.KEYS.userSession);
+    return s ? JSON.parse(s) : null;
+  },
+  setCurrentUser(user) { localStorage.setItem(this.KEYS.userSession, JSON.stringify(user)); },
+  registerUser(name, email, password) {
+    const users = this.getUsers();
+    if (users.find(u => u.email.toLowerCase() === email.toLowerCase()))
+      return { error: 'E-mail já cadastrado.' };
+    const user = { id: 'u' + Date.now(), name: name.trim(), email: email.toLowerCase().trim(), password, createdAt: new Date().toISOString() };
+    users.push(user);
+    this.saveUsers(users);
+    this.setCurrentUser(user);
+    return { user };
+  },
+  loginUser(email, password) {
+    const user = this.getUsers().find(u => u.email.toLowerCase() === email.toLowerCase().trim() && u.password === password);
+    if (!user) return null;
+    this.setCurrentUser(user);
+    return user;
+  },
+  logoutUser() { localStorage.removeItem(this.KEYS.userSession); },
+
+  // ── Orders ────────────────────────────────────────────────
+  getOrders() { return JSON.parse(localStorage.getItem(this.KEYS.orders) || '[]'); },
+  saveOrders(orders) { localStorage.setItem(this.KEYS.orders, JSON.stringify(orders)); },
+  getUserOrders(userId) { return this.getOrders().filter(o => o.userId === userId); },
+  createOrder(userId, customerName, items, total) {
+    const orders = this.getOrders();
+    const order = {
+      id: 'ORD-' + Date.now(),
+      userId,
+      customerName,
+      items,
+      total,
+      status: 'Processando',
+      trackingCode: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    orders.push(order);
+    this.saveOrders(orders);
+    return order;
+  },
+  updateOrder(id, data) {
+    const orders = this.getOrders();
+    const i = orders.findIndex(o => o.id === id);
+    if (i !== -1) {
+      orders[i] = { ...orders[i], ...data, updatedAt: new Date().toISOString() };
+      this.saveOrders(orders);
+      return orders[i];
+    }
+    return null;
+  },
 
   // ── Settings ─────────────────────────────────────────────
   getSettings() {

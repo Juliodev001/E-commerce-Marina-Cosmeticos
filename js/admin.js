@@ -5,8 +5,10 @@ const Admin = {
   currentTab: 'dashboard',
   editingProduct: null,
   editingCategory: null,
+  editingOrder: null,
   pendingImage: '',
   searchQ: '',
+  orderSearchQ: '',
 
   ICONS: [
     { cls: 'fa-solid fa-spray-can-sparkles', lbl: 'Perfume' },
@@ -114,6 +116,15 @@ const Admin = {
     document.getElementById('catModalClose').addEventListener('click', () => this.closeCatModal());
     document.getElementById('catModalCancel').addEventListener('click', () => this.closeCatModal());
     document.getElementById('catModalSave').addEventListener('click', () => this.saveCategory());
+    // Order search
+    document.getElementById('orderSearch').addEventListener('input', e => {
+      this.orderSearchQ = e.target.value;
+      this.renderOrdersTable();
+    });
+    // Order modal
+    document.getElementById('orderModalClose').addEventListener('click', () => this.closeOrderModal());
+    document.getElementById('orderModalCancel').addEventListener('click', () => this.closeOrderModal());
+    document.getElementById('orderModalSave').addEventListener('click', () => this.saveOrder());
     // Image upload
     this.initImageUpload();
   },
@@ -131,6 +142,7 @@ const Admin = {
       dashboard: ['Dashboard', 'Visão geral da sua loja'],
       products:  ['Produtos', 'Gerencie o catálogo de produtos'],
       categories:['Categorias', 'Gerencie as categorias da loja'],
+      orders:    ['Pedidos', 'Gerencie os pedidos dos clientes'],
       settings:  ['Configurações', 'Configure os dados da loja'],
     };
     const [title, sub] = titles[tab] || ['', ''];
@@ -140,6 +152,7 @@ const Admin = {
     if (tab === 'dashboard')  this.renderDashboard();
     if (tab === 'products')   this.renderProductsTable();
     if (tab === 'categories') this.renderCategories();
+    if (tab === 'orders')     this.renderOrdersTable();
     if (tab === 'settings')   this.loadSettings();
   },
 
@@ -155,6 +168,8 @@ const Admin = {
     document.getElementById('statCats').textContent   = cats.filter(c => c.active).length;
     document.getElementById('statFeat').textContent   = featured.length;
     document.getElementById('statVal').textContent    = MarinStore.fmtPrice(stockVal);
+    const ordEl = document.getElementById('statOrders');
+    if (ordEl) ordEl.textContent = MarinStore.getOrders().length;
 
     // Recent products list
     const recent = [...prods].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
@@ -480,6 +495,71 @@ const Admin = {
     document.getElementById('pwdNew').value = '';
     document.getElementById('pwdConfirm').value = '';
     this.toast('Senha alterada com sucesso!', 'success');
+  },
+
+  // ── Orders ───────────────────────────────────────────────
+  renderOrdersTable() {
+    let orders = MarinStore.getOrders();
+    if (this.orderSearchQ) {
+      const q = this.orderSearchQ.toLowerCase();
+      orders = orders.filter(o =>
+        o.id.toLowerCase().includes(q) ||
+        (o.customerName || '').toLowerCase().includes(q)
+      );
+    }
+    orders = [...orders].reverse();
+    const tbody = document.getElementById('ordersTableBody');
+    if (!orders.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="table-empty"><i class="fa-solid fa-receipt"></i>Nenhum pedido ainda</td></tr>`;
+      return;
+    }
+    const statusClass = s => ({ 'Processando': 'badge-low', 'Enviado': 'badge-cat', 'Entregue': 'badge-active', 'Cancelado': 'badge-inactive' }[s] || 'badge-low');
+    tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td><span style="font-size:.8rem;font-weight:700;">${o.id}</span></td>
+        <td><div class="td-name">${o.customerName || '—'}</div></td>
+        <td style="font-size:.8rem;color:var(--muted);">${new Date(o.createdAt).toLocaleDateString('pt-BR')}</td>
+        <td class="td-price">${MarinStore.fmtPrice(o.total)}</td>
+        <td><span class="badge ${statusClass(o.status)}">${o.status}</span></td>
+        <td style="font-size:.8rem;color:var(--muted);">${o.trackingCode || '—'}</td>
+        <td>
+          <button class="btn btn-outline btn-icon btn-sm edit-order" data-id="${o.id}" title="Editar"><i class="fa-solid fa-pen"></i></button>
+        </td>
+      </tr>`).join('');
+    tbody.querySelectorAll('.edit-order').forEach(btn =>
+      btn.addEventListener('click', () => this.openOrderModal(btn.dataset.id))
+    );
+  },
+
+  openOrderModal(id) {
+    const orders = MarinStore.getOrders();
+    this.editingOrder = orders.find(o => o.id === id) || null;
+    if (!this.editingOrder) return;
+    const o = this.editingOrder;
+    document.getElementById('orderModalId').textContent = o.id;
+    document.getElementById('orderStatus').value   = o.status || 'Processando';
+    document.getElementById('orderTracking').value = o.trackingCode || '';
+    document.getElementById('orderItemsList').innerHTML =
+      `<strong>Itens:</strong><br>` +
+      o.items.map(i => `${i.qty}x ${i.name}${i.brand ? ` (${i.brand})` : ''} — ${MarinStore.fmtPrice(i.price * i.qty)}`).join('<br>') +
+      `<br><strong>Total: ${MarinStore.fmtPrice(o.total)}</strong>`;
+    document.getElementById('orderModal').classList.add('open');
+  },
+
+  closeOrderModal() {
+    document.getElementById('orderModal').classList.remove('open');
+    this.editingOrder = null;
+  },
+
+  saveOrder() {
+    if (!this.editingOrder) return;
+    MarinStore.updateOrder(this.editingOrder.id, {
+      status: document.getElementById('orderStatus').value,
+      trackingCode: document.getElementById('orderTracking').value.trim(),
+    });
+    this.toast('Pedido atualizado!', 'success');
+    this.closeOrderModal();
+    this.renderOrdersTable();
   },
 
   // ── Toast ────────────────────────────────────────────────

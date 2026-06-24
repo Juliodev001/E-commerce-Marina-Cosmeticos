@@ -69,6 +69,9 @@
         <button class="s-nav-link" data-tab="categories">
           <i class="fa-solid fa-tags"></i> Categorias
         </button>
+        <button class="s-nav-link" data-tab="orders">
+          <i class="fa-solid fa-receipt"></i> Pedidos
+        </button>
         <div class="nav-section" style="margin-top:8px;">Sistema</div>
         <button class="s-nav-link" data-tab="settings">
           <i class="fa-solid fa-gear"></i> Configurações
@@ -120,6 +123,10 @@
             <div class="stat-card">
               <div class="stat-icon green"><i class="fa-solid fa-wallet"></i></div>
               <div><h3 id="statVal" style="font-size:16px;margin-top:4px">R$ 0,00</h3><p>Valor em Estoque</p></div>
+            </div>
+            <div class="stat-card" style="cursor:pointer" onclick="Admin.switchTab('orders')">
+              <div class="stat-icon" style="background:rgba(205,149,149,.15)"><i class="fa-solid fa-receipt" style="color:#CD9595"></i></div>
+              <div><h3 id="statOrders">0</h3><p>Pedidos</p></div>
             </div>
           </div>
           <div class="table-card">
@@ -180,6 +187,37 @@
             </div>
             <div style="padding:20px;">
               <div class="cats-grid" id="catsGrid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ORDERS TAB ── -->
+        <div class="admin-tab" id="tab-orders">
+          <div class="table-card">
+            <div class="table-header">
+              <h3><i class="fa-solid fa-receipt" style="color:var(--primary);margin-right:8px;"></i>Pedidos</h3>
+              <div class="table-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="orderSearch" placeholder="Buscar por ID ou cliente…">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Rastreio</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <tr><td colspan="7" class="table-empty"><i class="fa-solid fa-box-open"></i>Carregando…</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -378,6 +416,38 @@
         <button class="btn btn-outline" id="catModalCancel">Cancelar</button>
         <button class="btn btn-primary" id="catModalSave">
           <i class="fa-solid fa-floppy-disk"></i> Salvar Categoria
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ ORDER MODAL -->
+  <div class="modal-backdrop" id="orderModal">
+    <div class="modal-panel" style="max-width:480px">
+      <div class="modal-panel-header">
+        <h3>Atualizar Pedido <span id="orderModalId" style="font-size:.85rem;color:var(--muted)"></span></h3>
+        <button class="modal-panel-close" id="orderModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-panel-body">
+        <div class="form-group">
+          <label>Status do Pedido</label>
+          <select id="orderStatus" class="form-control">
+            <option value="Processando">Processando</option>
+            <option value="Enviado">Enviado</option>
+            <option value="Entregue">Entregue</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Código de Rastreio <small style="color:var(--muted)">(opcional)</small></label>
+          <input type="text" id="orderTracking" class="form-control" placeholder="Ex: BR123456789BR">
+        </div>
+        <div id="orderItemsList" style="margin-top:8px;padding:14px;background:rgba(166,145,124,.06);border:1px solid var(--border);border-radius:10px;font-size:.82rem;color:var(--muted);line-height:1.8;"></div>
+      </div>
+      <div class="modal-panel-footer">
+        <button class="btn btn-outline" id="orderModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="orderModalSave">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar
         </button>
       </div>
     </div>
