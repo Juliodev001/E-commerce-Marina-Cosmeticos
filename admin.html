@@ -8,16 +8,41 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/admin.css?v=2">
+  <link rel="stylesheet" href="css/admin.css?v=3">
   <style>
     :root {
-      --primary:    #A6917C;
-      --primary-lt: #B8A48F;
+      --dark:       #A6917C;
+      --dark-2:     #B8A490;
+      --dark-3:     #9E8772;
+      --card:       #BBA899;
+      --card-hover: #C4B09E;
+      --primary:    #CD9595;
+      --primary-lt: #D9AAAA;
       --gold:       #CD9595;
       --primary-dk: #8D7B69;
-      --border:     rgba(166,145,124,.18);
-      --border-st:  rgba(166,145,124,.40);
+      --white:      #1a0907;
+      --text:       #2c1208;
+      --muted:      #4a3328;
+      --border:     rgba(26,9,7,.15);
+      --border-st:  rgba(26,9,7,.35);
     }
+    body { background: #A6917C !important; color: #2c1208 !important; }
+    .admin-sidebar { background: #9E8772 !important; }
+    .admin-topbar  { background: #B8A490 !important; border-color: rgba(26,9,7,.12) !important; }
+    .table-card    { background: #BBA899 !important; border-color: rgba(26,9,7,.12) !important; }
+    .admin-main    { background: #A6917C !important; }
+    .login-card    { background: #BBA899 !important; }
+    .s-nav-link    { color: #2c1208 !important; }
+    .s-nav-link:hover, .s-nav-link.active { background: rgba(26,9,7,.1) !important; color: #1a0907 !important; }
+    .stat-card     { background: #BBA899 !important; border-color: rgba(26,9,7,.12) !important; }
+    .modal-panel   { background: #BBA899 !important; }
+    .form-control  { background: rgba(255,255,255,.4) !important; border-color: rgba(26,9,7,.2) !important; color: #1a0907 !important; }
+    .form-control:focus { border-color: #CD9595 !important; }
+    .btn-primary   { background: #CD9595 !important; color: #fff !important; border-color: #CD9595 !important; }
+    .btn-primary:hover { background: #D9AAAA !important; }
+    table thead tr { background: rgba(26,9,7,.08) !important; }
+    table tbody tr:hover { background: rgba(26,9,7,.05) !important; }
+    .sidebar-logo p { color: #4a3328 !important; }
   </style>
 </head>
 <body>

@@ -2,22 +2,23 @@
    MARINA COSMÉTICOS — Admin Panel Styles
    ============================================================ */
 :root {
-  --dark:       #1a0907;
-  --dark-2:     #200e09;
-  --dark-3:     #2c1208;
-  --card:       #231009;
-  --primary:    #A6917C;
-  --primary-lt: #B8A48F;
+  --dark:       #A6917C;
+  --dark-2:     #B8A490;
+  --dark-3:     #9E8772;
+  --card:       #BBA899;
+  --card-hover: #C4B09E;
+  --primary:    #CD9595;
+  --primary-lt: #D9AAAA;
   --gold:       #CD9595;
   --primary-dk: #8D7B69;
-  --white:      #f5ede0;
-  --text:       #e0cbb5;
-  --muted:      #8c7260;
-  --border:     rgba(166,145,124,.18);
-  --border-st:  rgba(166,145,124,.40);
+  --white:      #1a0907;
+  --text:       #2c1208;
+  --muted:      #4a3328;
+  --border:     rgba(26,9,7,.15);
+  --border-st:  rgba(26,9,7,.35);
   --radius:     10px;
   --radius-lg:  16px;
-  --shadow:     0 4px 20px rgba(0,0,0,.45);
+  --shadow:     0 4px 20px rgba(0,0,0,.18);
   --t:          all .25s cubic-bezier(.4,0,.2,1);
   --sidebar-w:  240px;
   --success:    #5cb87a;
