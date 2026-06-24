@@ -60,6 +60,7 @@ const Admin = {
     document.getElementById('adminPage').style.display = 'flex';
     this.bindAdminEvents();
     this.switchTab('dashboard');
+    this.initGsap();
   },
 
   // ── Events ───────────────────────────────────────────────
@@ -190,6 +191,7 @@ const Admin = {
     document.getElementById('statVal').textContent    = MarinStore.fmtPrice(stockVal);
     const ordEl = document.getElementById('statOrders');
     if (ordEl) ordEl.textContent = MarinStore.getOrders().length;
+    this.animateCards();
 
     // Recent products list
     const recent = [...prods].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
@@ -609,6 +611,34 @@ const Admin = {
     this.toast('Pedido atualizado!', 'success');
     this.closeOrderModal();
     this.renderOrdersTable();
+  },
+
+  // ── GSAP Animations ──────────────────────────────────────
+  initGsap() {
+    if (typeof gsap === 'undefined') return;
+
+    // Sidebar entrada
+    gsap.fromTo('.admin-sidebar',
+      { x: -60, opacity: 0 },
+      { x: 0, opacity: 1, duration: .6, ease: 'power3.out' }
+    );
+    // Topbar entrada
+    gsap.fromTo('.admin-topbar',
+      { y: -30, opacity: 0 },
+      { y: 0, opacity: 1, duration: .5, ease: 'power2.out', delay: .2 }
+    );
+  },
+
+  animateCards() {
+    if (typeof gsap === 'undefined') return;
+    gsap.fromTo('.stat-card',
+      { y: 32, opacity: 0, scale: .95 },
+      { y: 0, opacity: 1, scale: 1, duration: .5, stagger: .09, ease: 'power2.out' }
+    );
+    gsap.fromTo('.table-card',
+      { y: 24, opacity: 0 },
+      { y: 0, opacity: 1, duration: .5, delay: .35, ease: 'power2.out' }
+    );
   },
 
   // ── Toast ────────────────────────────────────────────────
