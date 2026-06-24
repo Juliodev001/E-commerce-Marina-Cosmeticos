@@ -345,17 +345,7 @@ const App = {
     document.getElementById('heroShopBtn').addEventListener('click', () =>
       document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' })
     );
-    // Search
-    document.getElementById('searchToggle').addEventListener('click', () => {
-      const bar = document.getElementById('searchBar');
-      bar.classList.toggle('open');
-      if (bar.classList.contains('open')) setTimeout(() => document.getElementById('searchInput').focus(), 280);
-    });
-    document.getElementById('searchClose').addEventListener('click', () => {
-      document.getElementById('searchBar').classList.remove('open');
-      document.getElementById('searchInput').value = '';
-      this.loadProducts(this.activeCat);
-    });
+    // Search inline
     document.getElementById('searchInput').addEventListener('input', e =>
       this.loadProducts(this.activeCat, e.target.value)
     );

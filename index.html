@@ -20,34 +20,32 @@
   <!-- ═══════════════════════════════════════ HEADER -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <div class="logo-wrap">
-        <a href="#hero"><img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina Cosméticos" class="site-logo"></a>
+      <!-- Esquerda: carrinho + logo -->
+      <div class="header-start">
+        <button class="icon-btn" id="cartToggle" title="Carrinho">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <a href="#hero" class="logo-link">
+          <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina Cosméticos" class="site-logo">
+        </a>
       </div>
+      <!-- Centro: navegação -->
       <nav class="main-nav" id="mainNav">
         <a href="#hero" class="nav-link active">Início</a>
         <a href="#categoriesSection" class="nav-link">Categorias</a>
         <a href="#aboutSection" class="nav-link">Sobre</a>
         <!-- Dynamic category links injected by JS -->
       </nav>
-      <div class="header-actions">
-        <button class="icon-btn" id="searchToggle" title="Buscar">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <button class="icon-btn" id="cartToggle" title="Carrinho">
-          <i class="fa-solid fa-bag-shopping"></i>
-          <span class="cart-badge" id="cartBadge">0</span>
-        </button>
+      <!-- Direita: hamburguer + busca inline -->
+      <div class="header-end">
         <button class="icon-btn menu-toggle" id="menuToggle" title="Menu">
           <i class="fa-solid fa-bars"></i>
         </button>
-      </div>
-    </div>
-    <!-- Search Bar -->
-    <div class="search-bar" id="searchBar">
-      <div class="search-inner">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Buscar perfumes, maquiagens, skincare…" autocomplete="off">
-        <button id="searchClose"><i class="fa-solid fa-xmark"></i></button>
+        <div class="header-search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Buscar produtos…" autocomplete="off">
+        </div>
       </div>
     </div>
   </header>
