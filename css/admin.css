@@ -226,6 +226,19 @@ tbody tr:hover td { background:rgba(166,145,124,.04); }
   display:flex; align-items:center; justify-content:center; font-size:13px;
 }
 
+/* ── Carousel Admin ─────────────────────────────────────── */
+.carousel-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; }
+.carousel-admin-item { position:relative; border-radius:10px; overflow:hidden; aspect-ratio:16/9; background:var(--dark-3); border:1px solid var(--border); group; }
+.carousel-admin-item img { width:100%; height:100%; object-fit:cover; display:block; }
+.carousel-admin-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%; color:var(--muted); font-size:.8rem; }
+.carousel-admin-empty i { font-size:1.8rem; opacity:.4; }
+.carousel-admin-remove { position:absolute; top:6px; right:6px; background:rgba(192,57,43,.85); border:none; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; font-size:.75rem; transition:background .18s; }
+.carousel-admin-remove:hover { background:#c0392b; }
+.carousel-admin-label { position:absolute; bottom:0; left:0; right:0; padding:5px 8px; background:rgba(0,0,0,.45); color:#fff; font-size:.72rem; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; }
+.carousel-admin-add { border:2px dashed var(--border-st); background:transparent; border-radius:10px; aspect-ratio:16/9; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; color:var(--muted); font-size:.82rem; transition:border-color .18s,color .18s; font-family:inherit; }
+.carousel-admin-add:hover { border-color:var(--primary); color:var(--primary); }
+.carousel-admin-add i { font-size:1.6rem; }
+
 /* ── Categories ─────────────────────────────────────────── */
 .cats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
 .cat-admin-card {

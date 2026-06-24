@@ -116,6 +116,24 @@ const Admin = {
     document.getElementById('catModalClose').addEventListener('click', () => this.closeCatModal());
     document.getElementById('catModalCancel').addEventListener('click', () => this.closeCatModal());
     document.getElementById('catModalSave').addEventListener('click', () => this.saveCategory());
+    // Carousel upload
+    const carouselInput = document.getElementById('carouselFileInput');
+    if (carouselInput) {
+      carouselInput.addEventListener('change', () => {
+        const file = carouselInput.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { this.toast('Use JPG, PNG ou WebP', 'error'); return; }
+        if (file.size > 3 * 1024 * 1024) { this.toast('Imagem muito grande. Máximo 3 MB.', 'error'); return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+          MarinStore.addCarouselSlide(e.target.result, file.name.replace(/\.[^.]+$/, ''));
+          this.renderCarouselSection();
+          this.toast('Foto adicionada ao carrossel!', 'success');
+          carouselInput.value = '';
+        };
+        reader.readAsDataURL(file);
+      });
+    }
     // Order search
     document.getElementById('orderSearch').addEventListener('input', e => {
       this.orderSearchQ = e.target.value;
@@ -153,7 +171,7 @@ const Admin = {
     if (tab === 'products')   this.renderProductsTable();
     if (tab === 'categories') this.renderCategories();
     if (tab === 'orders')     this.renderOrdersTable();
-    if (tab === 'settings')   this.loadSettings();
+    if (tab === 'settings')   { this.loadSettings(); this.renderCarouselSection(); }
   },
 
   // ── Dashboard ────────────────────────────────────────────
@@ -495,6 +513,35 @@ const Admin = {
     document.getElementById('pwdNew').value = '';
     document.getElementById('pwdConfirm').value = '';
     this.toast('Senha alterada com sucesso!', 'success');
+  },
+
+  // ── Carousel ─────────────────────────────────────────────
+  renderCarouselSection() {
+    const grid = document.getElementById('carouselAdminGrid');
+    if (!grid) return;
+    const slides = MarinStore.getCarouselSlides();
+    if (!slides.length) {
+      grid.innerHTML = `
+        <div class="carousel-admin-item">
+          <div class="carousel-admin-empty"><i class="fa-solid fa-image"></i><span>Nenhuma foto ainda</span></div>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = slides.map(s => `
+      <div class="carousel-admin-item">
+        <img src="${s.image}" alt="${s.label || ''}">
+        ${s.label ? `<div class="carousel-admin-label">${s.label}</div>` : ''}
+        <button class="carousel-admin-remove" data-id="${s.id}" title="Remover"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    `).join('');
+    grid.querySelectorAll('.carousel-admin-remove').forEach(btn =>
+      btn.addEventListener('click', () => {
+        if (!confirm('Remover esta foto do carrossel?')) return;
+        MarinStore.removeCarouselSlide(btn.dataset.id);
+        this.renderCarouselSection();
+        this.toast('Foto removida', 'success');
+      })
+    );
   },
 
   // ── Orders ───────────────────────────────────────────────

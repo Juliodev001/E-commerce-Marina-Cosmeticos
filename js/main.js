@@ -19,6 +19,7 @@ const App = {
     this.updateFooter();
     this.bindEvents();
     this.initGsap();
+    this.initCarousel();
     this.applySettings();
   },
 
@@ -343,13 +344,16 @@ const App = {
   refreshUserUI() {
     const user = MarinStore.getCurrentUser();
     const chip = document.getElementById('userNameChip');
+    const label = document.getElementById('userLabel');
     const dropdown = document.getElementById('userDropdown');
     if (user) {
       chip.textContent = user.name.split(' ')[0];
       chip.style.display = 'inline-block';
+      if (label) label.style.display = 'none';
       document.getElementById('dropdownName').textContent = user.name;
     } else {
       chip.style.display = 'none';
+      if (label) label.style.display = 'inline';
       if (dropdown) dropdown.classList.remove('show');
     }
     this.refreshCart();
@@ -557,11 +561,74 @@ const App = {
     setTimeout(() => gsap.to(t, { y: 8, opacity: 0, duration: .25, onComplete: () => t.style.display = 'none' }), 2400);
   },
 
+  // ── Hero Carousel ────────────────────────────────────────
+  initCarousel() {
+    const slidesEl = document.getElementById('heroSlides');
+    if (!slidesEl) return;
+
+    // Inject dynamic slides from localStorage after the fixed first slide
+    const saved = MarinStore.getCarouselSlides();
+    saved.forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'hero-slide hero-slide-product';
+      div.innerHTML = `<img src="${s.image}" alt="${s.label || 'Produto'}">`;
+      slidesEl.appendChild(div);
+    });
+
+    // If no slides saved, keep placeholder
+    if (!saved.length) {
+      const ph = document.createElement('div');
+      ph.className = 'hero-slide hero-slide-product';
+      ph.innerHTML = `<div class="hero-slide-placeholder"><i class="fa-solid fa-image"></i><span>Adicione fotos pelo painel admin</span></div>`;
+      slidesEl.appendChild(ph);
+    }
+
+    const total = slidesEl.children.length;
+    let current = 0;
+    let timer;
+
+    const dotsWrap = document.getElementById('carouselDots');
+    const buildDots = () => {
+      dotsWrap.innerHTML = Array.from({ length: slidesEl.children.length }, (_, i) =>
+        `<button class="carousel-dot${i === 0 ? ' active' : ''}" data-i="${i}"></button>`
+      ).join('');
+      dotsWrap.querySelectorAll('.carousel-dot').forEach(d =>
+        d.addEventListener('click', () => { goTo(+d.dataset.i); resetTimer(); })
+      );
+    };
+    buildDots();
+
+    const goTo = (idx) => {
+      const n = slidesEl.children.length;
+      current = (idx + n) % n;
+      slidesEl.style.transform = `translateX(-${current * 100}%)`;
+      dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) =>
+        d.classList.toggle('active', i === current)
+      );
+    };
+
+    const next = () => goTo(current + 1);
+    const prev = () => goTo(current - 1);
+
+    document.getElementById('carouselNext').addEventListener('click', () => { next(); resetTimer(); });
+    document.getElementById('carouselPrev').addEventListener('click', () => { prev(); resetTimer(); });
+
+    let startX = 0;
+    slidesEl.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    slidesEl.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); resetTimer(); }
+    });
+
+    const resetTimer = () => { clearInterval(timer); timer = setInterval(next, 4000); };
+    resetTimer();
+  },
+
   // ── GSAP Animations ──────────────────────────────────────
   initGsap() {
     gsap.timeline({ delay: .15 })
-      .fromTo('#heroLogo', { opacity: 0, scale: .82 }, { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' })
-      .fromTo('#heroText', { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, '-=.45')
+      .fromTo('.hero-slide-img-side', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: .9, ease: 'power3.out' })
+      .fromTo('#heroText', { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: .8, ease: 'power2.out' }, '-=.6')
       .fromTo('#heroScroll', { opacity: 0 }, { opacity: 1, duration: .5 }, '-=.2');
 
     gsap.to('.sparkle', {

@@ -8,6 +8,7 @@ const MarinStore = {
     users:       'marina_users',
     userSession: 'marina_user_session',
     orders:      'marina_orders',
+    carousel:    'marina_carousel',
   },
 
   getCartKey() {
@@ -198,6 +199,18 @@ const MarinStore = {
     return s ? JSON.parse(s) : { storeName: 'Marina Cosméticos', whatsapp: '5511999999999', instagram: '', facebook: '', email: 'contato@marina.com.br', address: 'Sua cidade, Estado' };
   },
   saveSettings(obj) { localStorage.setItem(this.KEYS.settings, JSON.stringify(obj)); },
+
+  // ── Carousel ─────────────────────────────────────────────
+  getCarouselSlides() { return JSON.parse(localStorage.getItem(this.KEYS.carousel) || '[]'); },
+  saveCarouselSlides(slides) { localStorage.setItem(this.KEYS.carousel, JSON.stringify(slides)); },
+  addCarouselSlide(image, label) {
+    const slides = this.getCarouselSlides();
+    slides.push({ id: 'cs' + Date.now(), image, label: label || '' });
+    this.saveCarouselSlides(slides);
+  },
+  removeCarouselSlide(id) {
+    this.saveCarouselSlides(this.getCarouselSlides().filter(s => s.id !== id));
+  },
 
   // ── Helpers ──────────────────────────────────────────────
   fmtPrice(v) { return 'R$ ' + Number(v).toFixed(2).replace('.', ','); },

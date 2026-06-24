@@ -35,7 +35,6 @@
     .site-header       { background: #9E8772 !important; }
     .site-header.scrolled { background: rgba(158,135,114,.97) !important; }
     .hero              { background: #A6917C !important; }
-    .hero-logo         { mask-image: none !important; -webkit-mask-image: none !important; border-radius: 20px !important; box-shadow: 0 8px 40px rgba(0,0,0,.25) !important; }
     .btn-primary       { background: #CD9595 !important; color: #fff !important; border: none !important; }
     .btn-primary:hover { background: #D9AAAA !important; }
     .add-btn           { background: #CD9595 !important; color: #fff !important; }
@@ -47,9 +46,61 @@
     .header-start { gap: 12px !important; align-items: center !important; }
     .main-nav { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important; flex: none !important; }
     .header-end { margin-left: auto !important; }
+    #prodTitle { border: 1.5px solid #1a0907; border-radius: 20px; padding: 8px 28px; display: inline-block; }
+
+    /* ── Hero Banner Carousel (full-width) ── */
+    .hero { min-height:unset !important; align-items:stretch !important; flex-direction:column !important; padding:0 !important; }
+    .hero-banner { position:relative; width:100%; overflow:hidden; }
+    .hero-slides { display:flex; transition:transform .5s cubic-bezier(.4,0,.2,1); will-change:transform; }
+    .hero-slide { min-width:100%; height:420px; display:flex; align-items:stretch; flex-shrink:0; }
+
+    /* Slide 1 – logo + texto lado a lado */
+    .hero-slide-main { background:#A6917C; }
+    .hero-slide-inner { display:flex; align-items:center; justify-content:center; gap:60px; width:100%; height:100%; padding:0 8%; }
+    .hero-slide-img-side { flex-shrink:0; }
+    .hero-slide-img-side .hero-logo { width:220px; height:220px; object-fit:cover; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.25); mask-image:none !important; -webkit-mask-image:none !important; }
+    .hero-slide-text-side { text-align:left; }
+    .hero-slide-text-side .hero-tagline { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,3vw,36px); color:#1a0907; font-style:italic; margin-bottom:6px; }
+    .hero-slide-text-side .hero-sub { font-size:11px; color:#4a3328; letter-spacing:3px; text-transform:uppercase; margin-bottom:28px; }
+    .hero-slide-text-side .hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
+
+    /* Slides de produto */
+    .hero-slide-product { background:#BBA899; }
+    .hero-slide-product img { width:100%; height:100%; object-fit:cover; }
+    .hero-slide-placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; color:rgba(26,9,7,.3); font-size:.9rem; width:100%; }
+    .hero-slide-placeholder i { font-size:3rem; }
+
+    /* Botões de navegação */
+    .carousel-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.6); border:none; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; color:#1a0907; transition:background .18s; backdrop-filter:blur(6px); z-index:5; box-shadow:0 2px 12px rgba(0,0,0,.15); }
+    .carousel-btn:hover { background:rgba(255,255,255,.92); }
+    .carousel-prev { left:18px; }
+    .carousel-next { right:18px; }
+
+    /* Pontos */
+    .carousel-dots { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:5; }
+    .carousel-dot { width:9px; height:9px; border-radius:50%; background:rgba(26,9,7,.25); border:none; padding:0; cursor:pointer; transition:background .2s,transform .2s; }
+    .carousel-dot.active { background:#CD9595; transform:scale(1.35); }
+
+    /* Responsivo */
+    @media(max-width:768px) {
+      .hero-slide { height:320px; }
+      .hero-slide-inner { flex-direction:column; gap:20px; padding:24px 20px; text-align:center; }
+      .hero-slide-img-side .hero-logo { width:130px; height:130px; }
+      .hero-slide-text-side { text-align:center; }
+      .hero-slide-text-side .hero-actions { justify-content:center; }
+    }
+    @media(max-width:480px) {
+      .hero-slide { height:280px; }
+      .hero-slide-inner { gap:14px; padding:20px 16px; }
+      .hero-slide-img-side .hero-logo { width:100px; height:100px; }
+      .carousel-btn { width:34px; height:34px; font-size:.85rem; }
+      .carousel-prev { left:8px; }
+      .carousel-next { right:8px; }
+    }
 
     /* ── User button ── */
-    .user-name-chip { font-size:.7rem; font-weight:600; background:#CD9595; color:#fff; border-radius:20px; padding:2px 8px; margin-left:4px; max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .user-label { font-size:.78rem; font-weight:700; letter-spacing:.04em; color:#1a0907; border:1.5px solid #1a0907; border-radius:20px; padding:4px 12px; }
+    .user-name-chip { font-size:.7rem; font-weight:600; background:#CD9595; color:#fff; border-radius:20px; padding:2px 8px; max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
     /* ── User dropdown ── */
     .user-dropdown { position:fixed; top:68px; right:100px; background:#BBA899; border:1px solid rgba(26,9,7,.18); border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.18); z-index:1200; min-width:180px; overflow:hidden; display:none; }
@@ -135,7 +186,7 @@
           <i class="fa-solid fa-bars"></i>
         </button>
         <button class="icon-btn user-btn" id="userToggle" title="Minha conta">
-          <i class="fa-solid fa-user"></i>
+          <span class="user-label" id="userLabel">Login</span>
           <span class="user-name-chip" id="userNameChip" style="display:none"></span>
         </button>
         <button class="icon-btn" id="cartToggle" title="Carrinho">
@@ -158,27 +209,44 @@
       <div class="sparkle" style="--x:30%;--y:85%"></div>
       <div class="sparkle" style="--x:74%;--y:40%"></div>
     </div>
-    <div class="hero-content">
-      <div class="hero-logo-wrap" id="heroLogo">
-        <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina" class="hero-logo">
-      </div>
-      <div id="heroText">
-        <p class="hero-tagline">Beleza que transforma</p>
-        <p class="hero-sub">Os melhores perfumes e cosméticos desde 2001</p>
-        <div class="hero-actions">
-          <button class="btn-primary" id="heroShopBtn">
-            <span>Explorar Coleção</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
-          <a href="#" class="btn-outline" data-wa target="_blank">
-            <i class="fa-brands fa-whatsapp"></i>
-            <span>Fale Conosco</span>
-          </a>
+
+    <!-- Carrossel full-width -->
+    <div class="hero-banner" id="heroLogo">
+      <div class="hero-slides" id="heroSlides">
+
+        <!-- Slide 1: logo + texto -->
+        <div class="hero-slide hero-slide-main">
+          <div class="hero-slide-inner">
+            <div class="hero-slide-img-side">
+              <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina" class="hero-logo">
+            </div>
+            <div class="hero-slide-text-side" id="heroText">
+              <p class="hero-tagline">Beleza que transforma</p>
+              <p class="hero-sub">Os melhores perfumes e cosméticos desde 2001</p>
+              <div class="hero-actions">
+                <button class="btn-primary" id="heroShopBtn">
+                  <span>Explorar Coleção</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <a href="#" class="btn-outline" data-wa target="_blank">
+                  <i class="fa-brands fa-whatsapp"></i>
+                  <span>Fale Conosco</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Slides de produto são injetados pelo JS via admin -->
+
       </div>
+
+      <button class="carousel-btn carousel-prev" id="carouselPrev"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="carousel-btn carousel-next" id="carouselNext"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="carousel-dots" id="carouselDots"></div>
     </div>
+
     <div id="heroScroll" class="hero-scroll">
-      <span>Descubra</span>
       <div class="scroll-line"></div>
     </div>
   </section>
