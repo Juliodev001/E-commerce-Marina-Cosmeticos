@@ -161,6 +161,7 @@ const Admin = {
       products:  ['Produtos', 'Gerencie o catálogo de produtos'],
       categories:['Categorias', 'Gerencie as categorias da loja'],
       orders:    ['Pedidos', 'Gerencie os pedidos dos clientes'],
+      carousel:  ['Carrossel', 'Gerencie as fotos do banner principal'],
       settings:  ['Configurações', 'Configure os dados da loja'],
     };
     const [title, sub] = titles[tab] || ['', ''];
@@ -171,7 +172,8 @@ const Admin = {
     if (tab === 'products')   this.renderProductsTable();
     if (tab === 'categories') this.renderCategories();
     if (tab === 'orders')     this.renderOrdersTable();
-    if (tab === 'settings')   { this.loadSettings(); this.renderCarouselSection(); }
+    if (tab === 'carousel')   this.renderCarouselSection();
+    if (tab === 'settings')   this.loadSettings();
   },
 
   // ── Dashboard ────────────────────────────────────────────

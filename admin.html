@@ -97,6 +97,9 @@
         <button class="s-nav-link" data-tab="orders">
           <i class="fa-solid fa-receipt"></i> Pedidos
         </button>
+        <button class="s-nav-link" data-tab="carousel">
+          <i class="fa-solid fa-images"></i> Carrossel
+        </button>
         <div class="nav-section" style="margin-top:8px;">Sistema</div>
         <button class="s-nav-link" data-tab="settings">
           <i class="fa-solid fa-gear"></i> Configurações
@@ -247,11 +250,9 @@
           </div>
         </div>
 
-        <!-- ── SETTINGS TAB ── -->
-        <div class="admin-tab" id="tab-settings">
-
-          <!-- Carrossel -->
-          <div class="table-card" style="margin-bottom:24px;">
+        <!-- ── CAROUSEL TAB ── -->
+        <div class="admin-tab" id="tab-carousel">
+          <div class="table-card">
             <div class="table-header">
               <h3><i class="fa-solid fa-images" style="color:var(--primary);margin-right:8px;"></i>Carrossel do Site</h3>
               <label class="btn btn-primary btn-sm" style="cursor:pointer;">
@@ -260,11 +261,14 @@
               </label>
             </div>
             <div style="padding:20px;">
-              <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Fotos exibidas no banner principal do site. O primeiro slide (logo) é fixo.</p>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Fotos exibidas no banner principal do site. O primeiro slide (logo + texto) é fixo.</p>
               <div class="carousel-admin-grid" id="carouselAdminGrid"></div>
             </div>
           </div>
+        </div>
 
+        <!-- ── SETTINGS TAB ── -->
+        <div class="admin-tab" id="tab-settings">
           <div class="settings-grid">
             <!-- Store Info -->
             <div class="settings-section">
