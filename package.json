@@ -1,0 +1,9 @@
+{
+  "name": "marina-cosmeticos",
+  "version": "1.0.0",
+  "description": "Marina Revenda de Perfumes e Cosméticos",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  }
+}

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Marina Cosméticos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════ LOGIN PAGE -->
+  <div id="loginPage" class="login-page" style="display:none">
+    <div class="login-card">
+      <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina" class="login-logo">
+      <h1>Painel Administrativo</h1>
+      <p class="login-sub">Acesso restrito · Marina Cosméticos</p>
+      <div class="login-err" id="loginErr"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginPwd"><i class="fa-solid fa-lock"></i> Senha</label>
+          <input type="password" id="loginPwd" class="form-control" placeholder="Digite sua senha" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:8px">
+          <i class="fa-solid fa-right-to-bracket"></i> Entrar
+        </button>
+      </form>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+        <a href="index.html" style="color:var(--muted);font-size:12px;display:flex;align-items:center;gap:6px;justify-content:center;">
+          <i class="fa-solid fa-arrow-left"></i> Voltar ao site
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ ADMIN PAGE -->
+  <div id="adminPage" class="admin-layout" style="display:none">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-logo">
+        <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina">
+        <p>Painel Admin</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Principal</div>
+        <button class="s-nav-link" data-tab="dashboard">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </button>
+        <button class="s-nav-link" data-tab="products">
+          <i class="fa-solid fa-box"></i> Produtos
+        </button>
+        <button class="s-nav-link" data-tab="categories">
+          <i class="fa-solid fa-tags"></i> Categorias
+        </button>
+        <div class="nav-section" style="margin-top:8px;">Sistema</div>
+        <button class="s-nav-link" data-tab="settings">
+          <i class="fa-solid fa-gear"></i> Configurações
+        </button>
+        <a href="index.html" class="s-nav-link" target="_blank">
+          <i class="fa-solid fa-store"></i> Ver Site
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="s-nav-link" id="logoutBtn" style="color:var(--danger);">
+          <i class="fa-solid fa-right-from-bracket"></i> Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-title">
+          <h2 id="topbarTitle">Dashboard</h2>
+          <p id="topbarSub">Visão geral da sua loja</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-outline btn-sm" id="sidebarToggle" style="display:none">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content area -->
+      <div class="admin-content">
+
+        <!-- ── DASHBOARD TAB ── -->
+        <div class="admin-tab" id="tab-dashboard">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon gold"><i class="fa-solid fa-box"></i></div>
+              <div><h3 id="statProds">0</h3><p>Produtos Ativos</p></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon pink"><i class="fa-solid fa-tags"></i></div>
+              <div><h3 id="statCats">0</h3><p>Categorias Ativas</p></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="fa-solid fa-star"></i></div>
+              <div><h3 id="statFeat">0</h3><p>Em Destaque</p></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="fa-solid fa-wallet"></i></div>
+              <div><h3 id="statVal" style="font-size:16px;margin-top:4px">R$ 0,00</h3><p>Valor em Estoque</p></div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-header">
+              <h3><i class="fa-solid fa-clock-rotate-left" style="color:var(--primary);margin-right:8px;"></i>Produtos Recentes</h3>
+              <button class="btn btn-outline btn-sm" onclick="Admin.switchTab('products')">
+                <i class="fa-solid fa-list"></i> Ver Todos
+              </button>
+            </div>
+            <div style="padding:16px;" id="recentList"></div>
+          </div>
+        </div>
+
+        <!-- ── PRODUCTS TAB ── -->
+        <div class="admin-tab" id="tab-products">
+          <div class="table-card">
+            <div class="table-header">
+              <h3><i class="fa-solid fa-box" style="color:var(--primary);margin-right:8px;"></i>Catálogo de Produtos</h3>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <div class="table-search">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <input type="text" id="prodSearch" placeholder="Buscar por nome ou marca…">
+                </div>
+                <button class="btn btn-primary btn-sm" id="newProdBtn">
+                  <i class="fa-solid fa-plus"></i> Novo Produto
+                </button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Nome / Marca</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="prodTableBody">
+                  <tr><td colspan="7" class="table-empty"><i class="fa-solid fa-box-open"></i>Carregando…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CATEGORIES TAB ── -->
+        <div class="admin-tab" id="tab-categories">
+          <div class="table-card" style="margin-bottom:0">
+            <div class="table-header">
+              <h3><i class="fa-solid fa-tags" style="color:var(--primary);margin-right:8px;"></i>Categorias</h3>
+              <button class="btn btn-primary btn-sm" id="newCatBtn">
+                <i class="fa-solid fa-plus"></i> Nova Categoria
+              </button>
+            </div>
+            <div style="padding:20px;">
+              <div class="cats-grid" id="catsGrid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SETTINGS TAB ── -->
+        <div class="admin-tab" id="tab-settings">
+          <div class="settings-grid">
+            <!-- Store Info -->
+            <div class="settings-section">
+              <h3><i class="fa-solid fa-store"></i> Informações da Loja</h3>
+              <form id="settingsForm">
+                <div class="form-group">
+                  <label>Nome da Loja</label>
+                  <input type="text" id="sStoreName" class="form-control" placeholder="Marina Cosméticos">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-brands fa-whatsapp"></i> WhatsApp (com DDI)</label>
+                  <input type="text" id="sWhatsApp" class="form-control" placeholder="5511999999999">
+                  <small style="color:var(--muted);font-size:11px;margin-top:4px;display:block;">Formato: código do país + DDD + número (sem espaços ou traços)</small>
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-brands fa-instagram"></i> Instagram</label>
+                  <input type="text" id="sInstagram" class="form-control" placeholder="@marinacosmeticos">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-brands fa-facebook"></i> Facebook</label>
+                  <input type="text" id="sFacebook" class="form-control" placeholder="facebook.com/marina">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-solid fa-envelope"></i> E-mail</label>
+                  <input type="email" id="sEmail" class="form-control" placeholder="contato@marina.com.br">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-solid fa-location-dot"></i> Endereço</label>
+                  <input type="text" id="sAddress" class="form-control" placeholder="Sua cidade, Estado">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                  <i class="fa-solid fa-floppy-disk"></i> Salvar Configurações
+                </button>
+              </form>
+            </div>
+            <!-- Security -->
+            <div class="settings-section">
+              <h3><i class="fa-solid fa-shield-halved"></i> Segurança</h3>
+              <form id="changePwdForm">
+                <div class="form-group">
+                  <label>Senha Atual</label>
+                  <input type="password" id="pwdCurrent" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                  <label>Nova Senha</label>
+                  <input type="password" id="pwdNew" class="form-control" placeholder="Mínimo 6 caracteres" required>
+                </div>
+                <div class="form-group">
+                  <label>Confirmar Nova Senha</label>
+                  <input type="password" id="pwdConfirm" class="form-control" placeholder="Repita a nova senha" required>
+                </div>
+                <button type="submit" class="btn btn-outline btn-full">
+                  <i class="fa-solid fa-lock"></i> Alterar Senha
+                </button>
+              </form>
+              <div style="margin-top:24px;padding:16px;background:rgba(201,168,130,.06);border:1px solid var(--border);border-radius:10px;">
+                <p style="font-size:12px;color:var(--muted);line-height:1.6;">
+                  <i class="fa-solid fa-circle-info" style="color:var(--primary);margin-right:6px;"></i>
+                  <strong style="color:var(--text);">Senha padrão:</strong> marina2001<br>
+                  Altere a senha padrão para proteger o painel admin.
+                </p>
+              </div>
+              <div style="margin-top:16px;padding:16px;background:rgba(201,168,130,.06);border:1px solid var(--border);border-radius:10px;">
+                <p style="font-size:12px;color:var(--muted);line-height:1.6;">
+                  <i class="fa-solid fa-database" style="color:var(--primary);margin-right:6px;"></i>
+                  <strong style="color:var(--text);">Armazenamento:</strong> Todos os dados (produtos, categorias, imagens) ficam salvos no <code style="color:var(--primary);">localStorage</code> deste navegador.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /admin-content -->
+    </main>
+  </div><!-- /admin-layout -->
+
+  <!-- ═══════════════════════ PRODUCT MODAL -->
+  <div class="modal-backdrop" id="prodModal">
+    <div class="modal-panel" style="max-width:680px">
+      <div class="modal-panel-header">
+        <h3 id="prodModalTitle">Novo Produto</h3>
+        <button class="modal-panel-close" id="prodModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-panel-body">
+        <!-- Image Upload -->
+        <div class="form-group">
+          <label>Imagem do Produto</label>
+          <div class="img-upload-area" id="imgUploadArea">
+            <input type="file" id="imgFileInput" accept="image/*">
+            <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <p>Clique ou arraste uma imagem aqui</p>
+            <small>JPG, PNG ou WebP · Máximo 2 MB</small>
+          </div>
+          <div class="img-preview" id="imgPreview">
+            <img id="imgPreviewImg" src="" alt="Preview">
+            <button type="button" class="img-preview-remove" id="imgPreviewRemove">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Fields -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="prodName" class="form-control" placeholder="Ex: Chanel N°5">
+          </div>
+          <div class="form-group">
+            <label>Marca</label>
+            <input type="text" id="prodBrand" class="form-control" placeholder="Ex: Chanel">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="prodDesc" class="form-control" placeholder="Descrição detalhada do produto…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Categoria <span style="color:var(--danger)">*</span></label>
+            <select id="prodCat" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Quantidade em Estoque <span style="color:var(--danger)">*</span></label>
+            <input type="number" id="prodQty" class="form-control" min="0" placeholder="0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preço (R$) <span style="color:var(--danger)">*</span></label>
+            <input type="number" id="prodPrice" class="form-control" min="0" step="0.01" placeholder="0,00">
+          </div>
+          <div class="form-group">
+            <label>Preço Original (R$) <small style="color:var(--muted)">(opcional — cria badge de desconto)</small></label>
+            <input type="number" id="prodOrigPrice" class="form-control" min="0" step="0.01" placeholder="0,00">
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:4px;">
+          <label class="form-check">
+            <input type="checkbox" id="prodFeatured">
+            <span class="check-box"></span>
+            <span><i class="fa-solid fa-star" style="color:var(--primary);margin-right:4px;"></i>Produto em Destaque</span>
+          </label>
+          <label class="form-check">
+            <input type="checkbox" id="prodActive" checked>
+            <span class="check-box"></span>
+            <span><i class="fa-solid fa-eye" style="color:var(--success);margin-right:4px;"></i>Produto Ativo (visível no site)</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-panel-footer">
+        <button class="btn btn-outline" id="prodModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="prodModalSave">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar Produto
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ CATEGORY MODAL -->
+  <div class="modal-backdrop" id="catModal">
+    <div class="modal-panel" style="max-width:500px">
+      <div class="modal-panel-header">
+        <h3 id="catModalTitle">Nova Categoria</h3>
+        <button class="modal-panel-close" id="catModalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-panel-body">
+        <div class="form-group">
+          <label>Nome da Categoria <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="catName" class="form-control" placeholder="Ex: Maquiagens">
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <input type="text" id="catDesc" class="form-control" placeholder="Breve descrição da categoria">
+        </div>
+        <div class="form-group">
+          <label>Ícone</label>
+          <div class="icon-input-wrap">
+            <div class="icon-preview" id="iconPreview"><i class="fa-solid fa-tag"></i></div>
+            <input type="text" id="catIconInput" class="form-control" placeholder="fa-solid fa-tag" style="font-size:12px;">
+          </div>
+          <small style="color:var(--muted);font-size:11px;margin-top:4px;display:block;">Selecione abaixo ou cole uma classe do Font Awesome</small>
+          <div class="icon-picker" id="iconPicker" style="margin-top:10px;"></div>
+        </div>
+        <label class="form-check" style="margin-top:8px;">
+          <input type="checkbox" id="catActive" checked>
+          <span class="check-box"></span>
+          <span>Categoria Ativa (visível no site)</span>
+        </label>
+      </div>
+      <div class="modal-panel-footer">
+        <button class="btn btn-outline" id="catModalCancel">Cancelar</button>
+        <button class="btn btn-primary" id="catModalSave">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar Categoria
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="a-toast" id="adminToast"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

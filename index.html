@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marina Cosméticos</title>
+  <meta name="description" content="Revenda de Perfumes e Cosméticos desde 2001. Os melhores perfumes e cosméticos nacionais e importados.">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════ HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <a href="#hero"><img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina Cosméticos" class="site-logo"></a>
+      </div>
+      <nav class="main-nav" id="mainNav">
+        <a href="#hero" class="nav-link active">Início</a>
+        <a href="#categoriesSection" class="nav-link">Categorias</a>
+        <a href="#aboutSection" class="nav-link">Sobre</a>
+        <!-- Dynamic category links injected by JS -->
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchToggle" title="Buscar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button class="icon-btn" id="cartToggle" title="Carrinho">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="icon-btn menu-toggle" id="menuToggle" title="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Search Bar -->
+    <div class="search-bar" id="searchBar">
+      <div class="search-inner">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Buscar perfumes, maquiagens, skincare…" autocomplete="off">
+        <button id="searchClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════ HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="sparkle" style="--x:12%;--y:28%"></div>
+      <div class="sparkle" style="--x:82%;--y:18%"></div>
+      <div class="sparkle" style="--x:65%;--y:72%"></div>
+      <div class="sparkle" style="--x:18%;--y:62%"></div>
+      <div class="sparkle" style="--x:90%;--y:50%"></div>
+      <div class="sparkle" style="--x:48%;--y:12%"></div>
+      <div class="sparkle" style="--x:30%;--y:85%"></div>
+      <div class="sparkle" style="--x:74%;--y:40%"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-logo-wrap" id="heroLogo">
+        <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina" class="hero-logo">
+      </div>
+      <div id="heroText">
+        <p class="hero-tagline">Beleza que transforma</p>
+        <p class="hero-sub">Os melhores perfumes e cosméticos desde 2001</p>
+        <div class="hero-actions">
+          <button class="btn-primary" id="heroShopBtn">
+            <span>Explorar Coleção</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <a href="#" class="btn-outline" data-wa target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Fale Conosco</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="heroScroll" class="hero-scroll">
+      <span>Descubra</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ PRODUCTS -->
+  <section class="products-section" id="productsSection">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Nossos Produtos</span>
+        <h2 class="section-title" id="prodTitle">Coleção <span class="gold-text">Completa</span></h2>
+      </div>
+      <div class="products-filter" id="productsFilter">
+        <!-- injected by JS -->
+      </div>
+      <div class="products-grid" id="productsGrid">
+        <!-- injected by JS -->
+      </div>
+      <div class="empty-state" id="emptyState" style="display:none">
+        <i class="fa-solid fa-box-open"></i>
+        <p>Nenhum produto encontrado</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ ABOUT -->
+  <section class="about-section" id="aboutSection">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual" id="aboutVisual">
+          <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina Cosméticos" class="about-logo">
+        </div>
+        <div class="about-content" id="aboutContent">
+          <span class="section-eyebrow">Nossa História</span>
+          <h2 class="section-title">Tradição e <span class="gold-text">Elegância</span></h2>
+          <p class="about-text">
+            Desde 2001, a Marina Revenda de Perfumes e Cosméticos traz para você as mais exclusivas fragrâncias e cosméticos do mercado. Com mais de duas décadas de experiência, somos referência em qualidade, variedade e atendimento personalizado para cada cliente.
+          </p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-num" data-val="23">23+</span>
+              <span class="stat-lbl">Anos de experiência</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-val="500">500+</span>
+              <span class="stat-lbl">Produtos disponíveis</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-val="1000">1000+</span>
+              <span class="stat-lbl">Clientes satisfeitos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ CATEGORIES (footer section) -->
+  <section class="categories-section" id="categoriesSection">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Nossas Linhas</span>
+        <h2 class="section-title">Explore por <span class="gold-text">Categoria</span></h2>
+      </div>
+      <div class="categories-grid" id="categoriesGrid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════ FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/WhatsApp Image 2026-06-24 at 9.18.22 AM.jpeg" alt="Marina" class="footer-logo">
+          <p>Revenda de Perfumes e Cosméticos desde 2001. Qualidade, elegância e atendimento personalizado para realçar sua beleza.</p>
+          <div class="social-links">
+            <a href="#" class="social-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-btn" data-wa target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#" class="social-btn" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Categorias</h4>
+          <ul id="footerCatList"><!-- injected by JS --></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <p><i class="fa-brands fa-whatsapp"></i> <span id="footerWa"></span></p>
+          <p><i class="fa-solid fa-envelope"></i> <span id="footerEmail"></span></p>
+          <p><i class="fa-solid fa-location-dot"></i> <span id="footerAddr"></span></p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="footerYear"></span> Marina Revenda de Perfumes e Cosméticos. Todos os direitos reservados.</p>
+        <a href="admin.html" class="admin-link"><i class="fa-solid fa-lock"></i> Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════ CART SIDEBAR -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fa-solid fa-bag-shopping"></i> Meu Carrinho</h3>
+      <button class="cart-close" id="cartClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span class="cart-total-val" id="cartTotalVal">R$ 0,00</span>
+      </div>
+      <button class="btn-primary btn-full" id="checkoutBtn">
+        <i class="fa-brands fa-whatsapp"></i> Finalizar via WhatsApp
+      </button>
+      <button class="btn-outline btn-full btn-sm" id="clearCartBtn" style="margin-top:10px">
+        <i class="fa-solid fa-trash"></i> Limpar Carrinho
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════ PRODUCT MODAL -->
+  <div class="product-modal" id="productModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-img">
+        <img id="modalImg" src="" alt="">
+      </div>
+      <div class="modal-info">
+        <span class="modal-cat" id="modalCat"></span>
+        <h2 class="modal-name" id="modalName"></h2>
+        <p class="modal-brand" id="modalBrand"></p>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-price-row">
+          <span class="modal-price" id="modalPrice"></span>
+          <span class="modal-orig" id="modalOrig"></span>
+        </div>
+        <div class="modal-stock" id="modalStock"></div>
+        <div class="modal-qty">
+          <button id="modalQtyMinus"><i class="fa-solid fa-minus"></i></button>
+          <span id="modalQtyVal">1</span>
+          <button id="modalQtyPlus"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <button class="btn-primary btn-full" id="modalAdd" style="margin-top:auto">
+          <i class="fa-solid fa-bag-shopping"></i> Adicionar ao Carrinho
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" style="display:none"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>document.getElementById('footerYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>
